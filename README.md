@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Efficient and Effective Class Attendance System
 
 A full-stack web application for tracking student attendance using QR codes with MongoDB database integration.
@@ -277,3 +278,6 @@ For support and questions:
 - [ ] Bulk import/export functionality
 - [ ] Real-time notifications
 - [ ] Integration with learning management systems
+=======
+# Efficient-and-Effective-Class-Attendance-Qr-code-system-
+>>>>>>> 008460c045a89548214932eb6c3294b4d3f69571
