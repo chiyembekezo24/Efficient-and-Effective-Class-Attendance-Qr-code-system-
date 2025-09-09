@@ -295,7 +295,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
         
         showCourseInfo(qrData);
-        showStudentForm();
+                showStudentForm();
         showMessage('QR code scanned successfully! You can now mark your attendance.', 'success');
     } else {
         showMessage('Please scan a QR code to mark your attendance.', 'error');
