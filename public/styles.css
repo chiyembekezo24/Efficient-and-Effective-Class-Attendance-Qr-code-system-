@@ -420,6 +420,10 @@ body {
     animation: modalSlideIn 0.3s ease;
 }
 
+.modal-content.qr-modal {
+    max-width: 600px;
+}
+
 .modal-content.large {
     max-width: 1200px;
     max-height: 90vh;
@@ -529,7 +533,9 @@ textarea.form-control {
 }
 
 .qr-image img {
-    max-width: 200px;
+    max-width: 300px;
+    width: 100%;
+    height: auto;
     border-radius: 8px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
@@ -955,6 +961,14 @@ textarea.form-control {
         margin: 10% auto;
     }
     
+    .modal-content.qr-modal {
+        max-width: 95%;
+    }
+    
+    .qr-image img {
+        max-width: 250px;
+    }
+    
     .form-actions {
         flex-direction: column;
     }
@@ -1042,6 +1056,18 @@ textarea.form-control {
     background: #fed7d7;
     color: #742a2a;
     border: 1px solid #feb2b2;
+}
+
+/* Additional QR Code Mobile Styles */
+@media (max-width: 480px) {
+    .qr-image img {
+        max-width: 200px;
+    }
+    
+    .modal-content.qr-modal {
+        max-width: 98%;
+        margin: 5% auto;
+    }
 }
 
 .message.info {
