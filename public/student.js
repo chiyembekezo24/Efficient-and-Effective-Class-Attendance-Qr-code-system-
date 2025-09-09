@@ -29,17 +29,21 @@ function processQRCodeFromURL(data) {
 // Show Course Information
 async function showCourseInfo(qrData) {
     try {
+        console.log('Fetching course info for:', qrData.courseId);
         const response = await fetch(`/api/courses/${qrData.courseId}`);
         
         if (response.ok) {
             const course = await response.json();
+            console.log('Course data received:', course);
             
             document.getElementById('courseName').textContent = course.name;
             document.getElementById('instructorName').textContent = course.instructor;
             document.getElementById('sessionTime').textContent = new Date(qrData.timestamp).toLocaleString();
             
             courseInfo.style.display = 'block';
+            console.log('Course info displayed successfully');
         } else {
+            console.error('Course not found, response status:', response.status);
             showMessage('Course not found.', 'error');
         }
     } catch (error) {
@@ -50,8 +54,16 @@ async function showCourseInfo(qrData) {
 
 // Show Student Form
 function showStudentForm() {
-    studentForm.style.display = 'block';
-    studentForm.scrollIntoView({ behavior: 'smooth' });
+    console.log('Showing student form...');
+    console.log('Student form element:', studentForm);
+    
+    if (studentForm) {
+        studentForm.style.display = 'block';
+        studentForm.scrollIntoView({ behavior: 'smooth' });
+        console.log('Student form displayed successfully');
+    } else {
+        console.error('Student form element not found!');
+    }
 }
 
 // Location Functions
