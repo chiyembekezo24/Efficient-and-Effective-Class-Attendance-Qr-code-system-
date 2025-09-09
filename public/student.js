@@ -281,13 +281,37 @@ attendanceForm.addEventListener('submit', async (e) => {
 document.addEventListener('DOMContentLoaded', () => {
     // Check if QR data is passed in URL parameters
     const urlParams = new URLSearchParams(window.location.search);
-    const qrDataParam = urlParams.get('data');
+    const courseId = urlParams.get('c');
+    const sessionId = urlParams.get('s');
+    const timestamp = urlParams.get('t');
+    const qrDataParam = urlParams.get('data'); // Fallback for old format
     
-    if (qrDataParam) {
+    if (courseId && sessionId && timestamp) {
         try {
-            console.log('QR Data Parameter:', qrDataParam);
+            console.log('QR Data Parameters:', { courseId, sessionId, timestamp });
+            
+            const qrData = {
+                courseId: courseId,
+                sessionId: sessionId,
+                timestamp: new Date(parseInt(timestamp)).toISOString()
+            };
+            
+            console.log('Parsed QR Data:', qrData);
+            
+            showCourseInfo(qrData);
+            showStudentForm();
+            
+            showMessage('QR code data loaded successfully!', 'success');
+        } catch (error) {
+            console.error('Error parsing QR data from URL:', error);
+            showMessage('Invalid QR code data in URL.', 'error');
+        }
+    } else if (qrDataParam) {
+        // Fallback for old JSON format
+        try {
+            console.log('QR Data Parameter (old format):', qrDataParam);
             const parsedData = JSON.parse(decodeURIComponent(qrDataParam));
-            console.log('Parsed QR Data:', parsedData);
+            console.log('Parsed QR Data (old format):', parsedData);
             
             if (parsedData.courseId && parsedData.timestamp && parsedData.sessionId) {
                 qrData = parsedData;
@@ -304,6 +328,6 @@ document.addEventListener('DOMContentLoaded', () => {
             showMessage('Invalid QR code data in URL.', 'error');
         }
     } else {
-        console.log('No QR data parameter found in URL');
+        console.log('No QR data parameters found in URL');
     }
 });

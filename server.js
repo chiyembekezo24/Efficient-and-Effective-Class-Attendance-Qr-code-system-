@@ -122,8 +122,8 @@ app.post('/api/courses/:id/qr-code', async (req, res) => {
             sessionId: uuidv4()
         };
 
-        // Create a URL that students can scan to access the student scanner
-        const studentScannerUrl = `${req.protocol}://${req.get('host')}/student?data=${encodeURIComponent(JSON.stringify(qrData))}`;
+        // Create a simpler URL that students can scan to access the student scanner
+        const studentScannerUrl = `${req.protocol}://${req.get('host')}/student?c=${courseId}&s=${qrData.sessionId}&t=${Date.now()}`;
         
         const qrCodeDataURL = await QRCode.toDataURL(studentScannerUrl, {
             width: 300,
