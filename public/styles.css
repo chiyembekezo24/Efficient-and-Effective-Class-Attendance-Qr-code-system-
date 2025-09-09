@@ -708,10 +708,6 @@ textarea.form-control {
     font-size: 0.8rem;
     font-weight: 500;
 }
-    border-radius: 12px;
-    padding: 20px;
-    min-height: 400px;
-}
 
 .report-controls {
     display: flex;
