@@ -216,8 +216,8 @@ async function submitAttendance(formData) {
 // Find or Create Student
 async function findOrCreateStudent(formData) {
     try {
-        // First, try to find existing student by student ID or email
-        const findResponse = await fetch(`/api/students/search?studentId=${formData.studentId}&email=${formData.email}`);
+        // First, try to find existing student by student ID
+        const findResponse = await fetch(`/api/students/search?studentId=${formData.studentId}`);
         
         if (findResponse.ok) {
             const existingStudent = await findResponse.json();
@@ -253,7 +253,7 @@ async function findOrCreateStudent(formData) {
             body: JSON.stringify({
                 name: formData.name,
                 studentId: formData.studentId,
-                email: formData.email,
+                email: '', // Empty email since it's not required
                 courseIds: [qrData.courseId]
             })
         });

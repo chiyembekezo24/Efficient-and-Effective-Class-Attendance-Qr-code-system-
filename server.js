@@ -148,7 +148,7 @@ app.post('/api/students', async (req, res) => {
         const student = new Student({
             name,
             studentId,
-            email,
+            email: email || '', // Handle empty email
             courseIds: courseIds || []
         });
         
@@ -157,7 +157,7 @@ app.post('/api/students', async (req, res) => {
     } catch (error) {
         console.error('Error creating student:', error);
         if (error.code === 11000) {
-            res.status(400).json({ error: 'Student ID or email already exists' });
+            res.status(400).json({ error: 'Student ID already exists' });
         } else {
             res.status(400).json({ error: error.message });
         }
