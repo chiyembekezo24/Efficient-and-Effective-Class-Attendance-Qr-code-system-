@@ -8,12 +8,6 @@ const studentForm = document.getElementById('studentForm');
 const attendanceForm = document.getElementById('attendanceForm');
 const statusMessage = document.getElementById('statusMessage');
 
-// Debug: Log DOM elements on page load
-console.log('DOM Elements loaded:');
-console.log('courseInfo:', courseInfo);
-console.log('studentForm:', studentForm);
-console.log('attendanceForm:', attendanceForm);
-console.log('statusMessage:', statusMessage);
 
 // Process QR Code Data from URL
 function processQRCodeFromURL(data) {
@@ -36,40 +30,29 @@ function processQRCodeFromURL(data) {
 // Show Course Information
 async function showCourseInfo(qrData) {
     try {
-        console.log('Fetching course info for:', qrData.courseId);
         const response = await fetch(`/api/courses/${qrData.courseId}`);
         
         if (response.ok) {
             const course = await response.json();
-            console.log('Course data received:', course);
             
             document.getElementById('courseName').textContent = course.name;
             document.getElementById('instructorName').textContent = course.instructor;
             document.getElementById('sessionTime').textContent = new Date(qrData.timestamp).toLocaleString();
             
             courseInfo.style.display = 'block';
-            console.log('Course info displayed successfully');
         } else {
-            console.error('Course not found, response status:', response.status);
             showMessage('Course not found.', 'error');
         }
     } catch (error) {
-        console.error('Error fetching course info:', error);
         showMessage('Error loading course information.', 'error');
     }
 }
 
 // Show Student Form
 function showStudentForm() {
-    console.log('Showing student form...');
-    console.log('Student form element:', studentForm);
-    
     if (studentForm) {
         studentForm.style.display = 'block';
         studentForm.scrollIntoView({ behavior: 'smooth' });
-        console.log('Student form displayed successfully');
-    } else {
-        console.error('Student form element not found!');
     }
 }
 
@@ -296,65 +279,25 @@ attendanceForm.addEventListener('submit', async (e) => {
     submitBtn.innerHTML = '<i class="fas fa-check"></i> Mark Attendance';
 });
 
-// Check if QR data is passed in URL parameters on page load
+// Show attendance form when page loads
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('Page loaded, checking for QR data...');
+    // Always show the student form
+    showStudentForm();
     
     // Check if QR data is passed in URL parameters
     const urlParams = new URLSearchParams(window.location.search);
     const courseId = urlParams.get('c');
     const sessionId = urlParams.get('s');
     const timestamp = urlParams.get('t');
-    const qrDataParam = urlParams.get('data'); // Fallback for old format
-    
-    console.log('URL parameters:', { courseId, sessionId, timestamp, qrDataParam });
     
     if (courseId && sessionId && timestamp) {
-        try {
-            console.log('QR Data Parameters:', { courseId, sessionId, timestamp });
-            
-            const qrData = {
-                courseId: courseId,
-                sessionId: sessionId,
-                timestamp: new Date(parseInt(timestamp)).toISOString()
-            };
-            
-            console.log('Parsed QR Data:', qrData);
-            
-            showCourseInfo(qrData);
-            showStudentForm();
-            
-            showMessage('QR code data loaded successfully!', 'success');
-        } catch (error) {
-            console.error('Error parsing QR data from URL:', error);
-            showMessage('Invalid QR code data in URL.', 'error');
-        }
-    } else if (qrDataParam) {
-        // Fallback for old JSON format
-        try {
-            console.log('QR Data Parameter (old format):', qrDataParam);
-            const parsedData = JSON.parse(decodeURIComponent(qrDataParam));
-            console.log('Parsed QR Data (old format):', parsedData);
-            
-            if (parsedData.courseId && parsedData.timestamp && parsedData.sessionId) {
-                qrData = parsedData;
-                showCourseInfo(parsedData);
-                showStudentForm();
-                
-                showMessage('QR code data loaded successfully!', 'success');
-            } else {
-                console.error('Missing required QR data fields:', parsedData);
-                showMessage('Invalid QR code format - missing required fields.', 'error');
-            }
-        } catch (error) {
-            console.error('Error parsing QR data from URL:', error);
-            showMessage('Invalid QR code data in URL.', 'error');
-        }
-    } else {
-        console.log('No QR data parameters found in URL');
-        // For testing: show the form anyway
-        console.log('Showing form for testing purposes...');
-        showStudentForm();
-        showMessage('No QR code data found. Please scan a QR code to mark attendance.', 'error');
+        const qrData = {
+            courseId: courseId,
+            sessionId: sessionId,
+            timestamp: new Date(parseInt(timestamp)).toISOString()
+        };
+        
+        showCourseInfo(qrData);
+        showMessage('QR code scanned successfully! You can now mark your attendance.', 'success');
     }
 });
