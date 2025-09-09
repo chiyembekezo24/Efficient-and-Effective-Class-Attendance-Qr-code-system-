@@ -126,13 +126,13 @@ app.post('/api/courses/:id/qr-code', async (req, res) => {
         const studentScannerUrl = `${req.protocol}://${req.get('host')}/student?c=${courseId}&s=${qrData.sessionId}&t=${Date.now()}`;
         
         const qrCodeDataURL = await QRCode.toDataURL(studentScannerUrl, {
-            width: 300,
-            margin: 2,
+            width: 500,
+            margin: 4,
             color: {
                 dark: '#000000',
                 light: '#FFFFFF'
             },
-            errorCorrectionLevel: 'M'
+            errorCorrectionLevel: 'H'
         });
         
         // Update course with QR code data

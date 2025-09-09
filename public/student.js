@@ -51,8 +51,8 @@ async function showCourseInfo(qrData) {
 // Show Student Form
 function showStudentForm() {
     if (studentForm) {
-        studentForm.style.display = 'block';
-        studentForm.scrollIntoView({ behavior: 'smooth' });
+    studentForm.style.display = 'block';
+    studentForm.scrollIntoView({ behavior: 'smooth' });
     }
 }
 
@@ -279,11 +279,8 @@ attendanceForm.addEventListener('submit', async (e) => {
     submitBtn.innerHTML = '<i class="fas fa-check"></i> Mark Attendance';
 });
 
-// Show attendance form when page loads
+// Show attendance form only after QR code scan
 document.addEventListener('DOMContentLoaded', () => {
-    // Always show the student form
-    showStudentForm();
-    
     // Check if QR data is passed in URL parameters
     const urlParams = new URLSearchParams(window.location.search);
     const courseId = urlParams.get('c');
@@ -298,6 +295,10 @@ document.addEventListener('DOMContentLoaded', () => {
         };
         
         showCourseInfo(qrData);
+                showStudentForm();
         showMessage('QR code scanned successfully! You can now mark your attendance.', 'success');
+    } else {
+        // Show message that QR code is required
+        showMessage('Please scan a QR code to mark your attendance.', 'error');
     }
 });

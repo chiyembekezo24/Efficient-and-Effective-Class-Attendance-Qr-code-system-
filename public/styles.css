@@ -421,7 +421,7 @@ body {
 }
 
 .modal-content.qr-modal {
-    max-width: 600px;
+    max-width: 800px;
 }
 
 .modal-content.large {
@@ -533,7 +533,7 @@ textarea.form-control {
 }
 
 .qr-image img {
-    max-width: 300px;
+    max-width: 500px;
     width: 100%;
     height: auto;
     border-radius: 8px;
@@ -966,7 +966,7 @@ textarea.form-control {
     }
     
     .qr-image img {
-        max-width: 250px;
+        max-width: 350px;
     }
     
     .form-actions {
@@ -1061,7 +1061,7 @@ textarea.form-control {
 /* Additional QR Code Mobile Styles */
 @media (max-width: 480px) {
     .qr-image img {
-        max-width: 200px;
+        max-width: 300px;
     }
     
     .modal-content.qr-modal {
