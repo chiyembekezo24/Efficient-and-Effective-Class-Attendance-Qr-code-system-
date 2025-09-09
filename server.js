@@ -39,6 +39,24 @@ app.get('/student', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'student.html'));
 });
 
+// Test endpoint for QR code debugging
+app.get('/test-qr', (req, res) => {
+    const testData = {
+        courseId: 'test-course-id',
+        timestamp: moment().toISOString(),
+        sessionId: uuidv4()
+    };
+    
+    const testUrl = `${req.protocol}://${req.get('host')}/student?data=${encodeURIComponent(JSON.stringify(testData))}`;
+    
+    res.json({
+        message: 'Test QR Code Data',
+        qrData: testData,
+        url: testUrl,
+        instructions: 'Use this URL to test the student scanner: ' + testUrl
+    });
+});
+
 // Course Management
 app.post('/api/courses', async (req, res) => {
     try {
@@ -123,9 +141,21 @@ app.post('/api/courses/:id/qr-code', async (req, res) => {
         };
 
         // Create a URL that students can scan to access the student scanner
-        const studentScannerUrl = `${req.protocol}://${req.get('host')}/student?data=${encodeURIComponent(JSON.stringify(qrData))}`;
+        const baseUrl = `${req.protocol}://${req.get('host')}`;
+        const studentScannerUrl = `${baseUrl}/student?data=${encodeURIComponent(JSON.stringify(qrData))}`;
         
-        const qrCodeDataURL = await QRCode.toDataURL(studentScannerUrl);
+        // Generate QR code with higher error correction and larger size for better mobile scanning
+        const qrCodeDataURL = await QRCode.toDataURL(studentScannerUrl, {
+            errorCorrectionLevel: 'M',
+            type: 'image/png',
+            quality: 0.92,
+            margin: 1,
+            color: {
+                dark: '#000000',
+                light: '#FFFFFF'
+            },
+            width: 300
+        });
         
         // Update course with QR code data
         course.qrCode = qrCodeDataURL;

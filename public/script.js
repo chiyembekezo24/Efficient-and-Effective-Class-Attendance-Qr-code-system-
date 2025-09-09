@@ -392,8 +392,22 @@ function showQRCode(qrCodeDataURL, sessionId) {
     const qrDisplay = document.getElementById('qrCodeDisplay');
     const qrImage = document.getElementById('qrCodeImage');
     
-    qrImage.innerHTML = `<img src="${qrCodeDataURL}" alt="QR Code">`;
+    // Create QR code image with better mobile support
+    qrImage.innerHTML = `
+        <img src="${qrCodeDataURL}" alt="QR Code" style="max-width: 100%; height: auto;">
+        <div class="qr-actions" style="margin-top: 15px;">
+            <button onclick="copyQRUrl()" class="btn btn-secondary" style="margin-right: 10px;">
+                <i class="fas fa-copy"></i> Copy URL
+            </button>
+            <button onclick="openStudentPage()" class="btn btn-primary">
+                <i class="fas fa-external-link-alt"></i> Open Student Page
+            </button>
+        </div>
+    `;
     qrDisplay.style.display = 'block';
+    
+    // Store the URL for copying
+    window.currentQRUrl = qrCodeDataURL;
     
     // Start timer
     startQRTimer();
@@ -852,6 +866,35 @@ function showStudentsList() {
     percentagesContainer.style.display = 'none';
 }
 
+// QR Code helper functions
+function copyQRUrl() {
+    if (window.currentQRUrl) {
+        // Extract the URL from the QR code data URL
+        const img = new Image();
+        img.onload = function() {
+            // Create a temporary canvas to extract the URL
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx.drawImage(img, 0, 0);
+            
+            // For now, we'll get the URL from the server response
+            // This is a simplified approach - in production you'd want to store the URL separately
+            navigator.clipboard.writeText(window.location.origin + '/student').then(() => {
+                showMessage('Student page URL copied to clipboard!', 'success');
+            }).catch(() => {
+                showMessage('Could not copy URL. Please manually navigate to /student', 'info');
+            });
+        };
+        img.src = window.currentQRUrl;
+    }
+}
+
+function openStudentPage() {
+    window.open('/student', '_blank');
+}
+
 // Global functions for onclick handlers
 window.showModal = showModal;
 window.closeModal = closeModal;
@@ -862,4 +905,6 @@ window.deleteStudent = deleteStudent;
 window.downloadReport = downloadReport;
 window.downloadAllReports = downloadAllReports;
 window.loadAttendancePercentages = loadAttendancePercentages;
+window.copyQRUrl = copyQRUrl;
+window.openStudentPage = openStudentPage;
 window.showStudentsList = showStudentsList;

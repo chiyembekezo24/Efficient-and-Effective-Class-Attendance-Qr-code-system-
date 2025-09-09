@@ -89,6 +89,25 @@ function scanQRCode() {
 // Process QR Code Data
 function processQRCode(data) {
     try {
+        console.log('Processing QR code data:', data);
+        
+        // Check if it's a URL first
+        if (data.startsWith('http')) {
+            const url = new URL(data);
+            const qrDataParam = url.searchParams.get('data');
+            if (qrDataParam) {
+                const parsedData = JSON.parse(decodeURIComponent(qrDataParam));
+                if (parsedData.courseId && parsedData.timestamp && parsedData.sessionId) {
+                    qrData = parsedData;
+                    stopCamera();
+                    showCourseInfo(parsedData);
+                    showStudentForm();
+                    return;
+                }
+            }
+        }
+        
+        // Try parsing as JSON directly
         const parsedData = JSON.parse(data);
         
         if (parsedData.courseId && parsedData.timestamp && parsedData.sessionId) {
@@ -97,11 +116,11 @@ function processQRCode(data) {
             showCourseInfo(parsedData);
             showStudentForm();
         } else {
-            showMessage('Invalid QR code format.', 'error');
+            showMessage('Invalid QR code format. Missing required fields.', 'error');
         }
     } catch (error) {
         console.error('Error parsing QR code:', error);
-        showMessage('Invalid QR code data.', 'error');
+        showMessage('Invalid QR code data. Please scan a valid attendance QR code.', 'error');
     }
 }
 
@@ -327,9 +346,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const urlParams = new URLSearchParams(window.location.search);
     const qrDataParam = urlParams.get('data');
     
+    console.log('URL parameters:', window.location.search);
+    console.log('QR data param:', qrDataParam);
+    
     if (qrDataParam) {
         try {
             const parsedData = JSON.parse(decodeURIComponent(qrDataParam));
+            console.log('Parsed QR data:', parsedData);
+            
             if (parsedData.courseId && parsedData.timestamp && parsedData.sessionId) {
                 qrData = parsedData;
                 showCourseInfo(parsedData);
@@ -342,11 +366,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 
                 showMessage('QR code data loaded successfully!', 'success');
+            } else {
+                console.error('Invalid QR data structure:', parsedData);
+                showMessage('Invalid QR code data structure in URL.', 'error');
             }
         } catch (error) {
             console.error('Error parsing QR data from URL:', error);
-            showMessage('Invalid QR code data in URL.', 'error');
+            showMessage('Invalid QR code data in URL. Please scan a valid QR code.', 'error');
         }
+    } else {
+        console.log('No QR data in URL parameters');
     }
 });
 
