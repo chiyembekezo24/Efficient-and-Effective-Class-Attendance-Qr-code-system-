@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Efficient and Effective Class Attendance</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1><i class="fas fa-qrcode"></i> Class Attendance System</h1>
+                <p>Efficient and Effective Student Attendance Tracking</p>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="nav">
+            <button class="nav-btn active" data-tab="dashboard">
+                <i class="fas fa-tachometer-alt"></i> Dashboard
+            </button>
+            <button class="nav-btn" data-tab="courses">
+                <i class="fas fa-book"></i> Courses
+            </button>
+            <button class="nav-btn" data-tab="students">
+                <i class="fas fa-users"></i> Students
+            </button>
+            <button class="nav-btn" data-tab="attendance">
+                <i class="fas fa-clipboard-check"></i> Attendance
+            </button>
+            <button class="nav-btn" data-tab="reports">
+                <i class="fas fa-chart-bar"></i> Reports
+            </button>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Tab -->
+            <div id="dashboard" class="tab-content active">
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <div class="card-icon">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3 id="totalCourses">0</h3>
+                            <p>Total Courses</p>
+                        </div>
+                    </div>
+                    <div class="dashboard-card">
+                        <div class="card-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3 id="totalStudents">0</h3>
+                            <p>Total Students</p>
+                        </div>
+                    </div>
+                    <div class="dashboard-card">
+                        <div class="card-icon">
+                            <i class="fas fa-clipboard-check"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3 id="todayAttendance">0</h3>
+                            <p>Today's Attendance</p>
+                        </div>
+                    </div>
+                    <div class="dashboard-card">
+                        <div class="card-icon">
+                            <i class="fas fa-percentage"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3 id="avgAttendance">0%</h3>
+                            <p>Average Attendance</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="quick-actions">
+                    <h2>Quick Actions</h2>
+                    <div class="action-buttons">
+                        <button class="action-btn" onclick="showModal('addCourseModal')">
+                            <i class="fas fa-plus"></i> Add Course
+                        </button>
+                        <button class="action-btn" onclick="showModal('addStudentModal')">
+                            <i class="fas fa-user-plus"></i> Add Student
+                        </button>
+                        <button class="action-btn" onclick="showModal('generateQRModal')">
+                            <i class="fas fa-qrcode"></i> Generate QR Code
+                        </button>
+                        <button class="action-btn" onclick="showModal('scanQRModal')">
+                            <i class="fas fa-camera"></i> Scan QR Code
+                        </button>
+                    </div>
+                </div>
+
+                <div class="recent-activity">
+                    <h2>Recent Activity</h2>
+                    <div id="recentActivity" class="activity-list">
+                        <p class="no-data">No recent activity</p>
+                    </div>
+                </div>
+                
+                <div class="workflow-info" style="background: #f7fafc; border-radius: 12px; padding: 20px; margin-top: 20px; border-left: 4px solid #667eea;">
+                    <h3 style="margin: 0 0 10px 0; color: #2d3748;">
+                        <i class="fas fa-lightbulb"></i> How It Works
+                    </h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+                        <div>
+                            <h4 style="margin: 0 0 8px 0; color: #4a5568;">For Instructors:</h4>
+                            <ol style="margin: 0; padding-left: 20px; color: #718096;">
+                                <li>Create courses in the "Courses" tab</li>
+                                <li>Generate QR codes for attendance sessions</li>
+                                <li>Share QR codes with students</li>
+                                <li>View attendance reports</li>
+                            </ol>
+                        </div>
+                        <div>
+                            <h4 style="margin: 0 0 8px 0; color: #4a5568;">For Students:</h4>
+                            <ol style="margin: 0; padding-left: 20px; color: #718096;">
+                                <li>Scan QR codes using the Student Scanner</li>
+                                <li>Create their own student account</li>
+                                <li>Mark attendance automatically</li>
+                                <li>No admin intervention needed</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Courses Tab -->
+            <div id="courses" class="tab-content">
+                <div class="tab-header">
+                    <h2>Course Management</h2>
+                    <button class="btn btn-primary" onclick="showModal('addCourseModal')">
+                        <i class="fas fa-plus"></i> Add Course
+                    </button>
+                </div>
+                <div id="coursesList" class="cards-grid">
+                    <p class="no-data">No courses available</p>
+                </div>
+            </div>
+
+            <!-- Students Tab -->
+            <div id="students" class="tab-content">
+                <div class="tab-header">
+                    <h2>Student Management</h2>
+                    <div class="student-controls">
+                        <button class="btn btn-primary" onclick="showModal('addStudentModal')">
+                            <i class="fas fa-plus"></i> Add Student Manually
+                        </button>
+                        <button class="btn btn-secondary" onclick="loadAttendancePercentages()">
+                            <i class="fas fa-chart-pie"></i> View Attendance Percentages
+                        </button>
+                        <div class="info-text" style="margin-left: 15px; color: #718096; font-size: 0.9rem;">
+                            <i class="fas fa-info-circle"></i> Students can also register themselves by scanning QR codes
+                        </div>
+                    </div>
+                </div>
+                <div id="studentsList" class="cards-grid">
+                    <p class="no-data">No students available</p>
+                </div>
+                <div id="attendancePercentagesContainer" class="attendance-percentages-container" style="display: none;">
+                    <div class="percentages-header">
+                        <h3>Student Attendance Percentages</h3>
+                        <div class="percentages-controls">
+                            <button class="btn btn-secondary" onclick="showStudentsList()">
+                                <i class="fas fa-arrow-left"></i> Back to Students
+                            </button>
+                            <input type="date" id="percentageDate" class="form-control">
+                            <button class="btn btn-primary" onclick="loadAttendancePercentages()">
+                                <i class="fas fa-refresh"></i> Refresh
+                            </button>
+                        </div>
+                    </div>
+                    <div id="attendancePercentagesList" class="percentages-list">
+                        <p class="no-data">Loading attendance percentages...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Attendance Tab -->
+            <div id="attendance" class="tab-content">
+                <div class="tab-header">
+                    <h2>Attendance Management</h2>
+                    <div class="attendance-controls">
+                        <button class="btn btn-primary" onclick="showModal('generateQRModal')">
+                            <i class="fas fa-qrcode"></i> Generate QR Code
+                        </button>
+                        <button class="btn btn-secondary" onclick="showModal('scanQRModal')">
+                            <i class="fas fa-camera"></i> Scan QR Code
+                        </button>
+                        <a href="/student" class="btn btn-secondary" target="_blank">
+                            <i class="fas fa-external-link-alt"></i> Student Scanner
+                        </a>
+                    </div>
+                </div>
+                <div id="attendanceList" class="attendance-container">
+                    <p class="no-data">No attendance records available</p>
+                </div>
+            </div>
+
+            <!-- Reports Tab -->
+            <div id="reports" class="tab-content">
+                <div class="tab-header">
+                    <h2>Attendance Reports</h2>
+                    <div class="report-controls">
+                        <input type="date" id="reportDate" class="form-control">
+                        <button class="btn btn-primary" onclick="generateReports()">
+                            <i class="fas fa-chart-bar"></i> Generate Report
+                        </button>
+                        <button class="btn btn-secondary" onclick="downloadAllReports()">
+                            <i class="fas fa-download"></i> Download All
+                        </button>
+                    </div>
+                </div>
+                <div id="reportsContainer" class="reports-container">
+                    <p class="no-data">Select a date and generate report</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    
+    <!-- Add Course Modal -->
+    <div id="addCourseModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Course</h3>
+                <span class="close" onclick="closeModal('addCourseModal')">&times;</span>
+            </div>
+            <form id="addCourseForm" class="modal-form">
+                <div class="form-group">
+                    <label for="courseName">Course Name</label>
+                    <input type="text" id="courseName" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="instructor">Instructor</label>
+                    <input type="text" id="instructor" name="instructor" required>
+                </div>
+                <div class="form-group">
+                    <label for="schedule">Schedule</label>
+                    <input type="text" id="schedule" name="schedule" placeholder="e.g., Mon/Wed/Fri 9:00 AM">
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" rows="3"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('addCourseModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Course</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Student Modal -->
+    <div id="addStudentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Student</h3>
+                <span class="close" onclick="closeModal('addStudentModal')">&times;</span>
+            </div>
+            <form id="addStudentForm" class="modal-form">
+                <div class="form-group">
+                    <label for="studentName">Full Name</label>
+                    <input type="text" id="studentName" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="studentId">Student ID</label>
+                    <input type="text" id="studentId" name="studentId" required>
+                </div>
+                <div class="form-group">
+                    <label for="studentEmail">Email</label>
+                    <input type="email" id="studentEmail" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="enrolledCourses">Enrolled Courses</label>
+                    <select id="enrolledCourses" name="courseIds" multiple>
+                        <!-- Will be populated dynamically -->
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('addStudentModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Student</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Generate QR Code Modal -->
+    <div id="generateQRModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Generate QR Code</h3>
+                <span class="close" onclick="closeModal('generateQRModal')">&times;</span>
+            </div>
+            <form id="generateQRForm" class="modal-form">
+                <div class="form-group">
+                    <label for="qrCourseSelect">Select Course</label>
+                    <select id="qrCourseSelect" name="courseId" required>
+                        <option value="">Choose a course...</option>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('generateQRModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Generate QR Code</button>
+                </div>
+            </form>
+            <div id="qrCodeDisplay" class="qr-display" style="display: none;">
+                <h4>QR Code Generated Successfully!</h4>
+                <div id="qrCodeImage" class="qr-image"></div>
+                <p class="qr-info">Students can scan this QR code to mark their attendance</p>
+                <p class="qr-timer">QR Code expires in: <span id="qrTimer">5:00</span></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scan QR Code Modal -->
+    <div id="scanQRModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Scan QR Code</h3>
+                <span class="close" onclick="closeModal('scanQRModal')">&times;</span>
+            </div>
+            <form id="scanQRForm" class="modal-form">
+                <div class="form-group">
+                    <label for="scanStudentSelect">Select Student</label>
+                    <select id="scanStudentSelect" name="studentId" required>
+                        <option value="">Choose a student...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="qrDataInput">QR Code Data</label>
+                    <textarea id="qrDataInput" name="qrData" placeholder="Paste QR code data here..." rows="3"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('scanQRModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Mark Attendance</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Report Detail Modal -->
+    <div id="reportDetailModal" class="modal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h3>Attendance Report</h3>
+                <span class="close" onclick="closeModal('reportDetailModal')">&times;</span>
+            </div>
+            <div id="reportDetailContent" class="report-detail">
+                <!-- Will be populated dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
