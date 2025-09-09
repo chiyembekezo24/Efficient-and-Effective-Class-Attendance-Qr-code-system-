@@ -125,7 +125,15 @@ app.post('/api/courses/:id/qr-code', async (req, res) => {
         // Create a URL that students can scan to access the student scanner
         const studentScannerUrl = `${req.protocol}://${req.get('host')}/student?data=${encodeURIComponent(JSON.stringify(qrData))}`;
         
-        const qrCodeDataURL = await QRCode.toDataURL(studentScannerUrl);
+        const qrCodeDataURL = await QRCode.toDataURL(studentScannerUrl, {
+            width: 400,
+            margin: 2,
+            color: {
+                dark: '#000000',
+                light: '#FFFFFF'
+            },
+            errorCorrectionLevel: 'M'
+        });
         
         // Update course with QR code data
         course.qrCode = qrCodeDataURL;
@@ -643,7 +651,7 @@ app.get('/api/reports/download-all', async (req, res) => {
                 `"${student.instructor}"`,
                 `"${student.name}"`,
                 `"${student.studentId}"`,
-                `"${student.email}"`,
+                `"${stumydent.email}"`,
                 `"${student.status}"`,
                 `"${student.timestamp}"`,
                 `"${student.location}"`,

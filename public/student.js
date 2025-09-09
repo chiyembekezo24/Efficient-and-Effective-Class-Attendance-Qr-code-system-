@@ -285,17 +285,25 @@ document.addEventListener('DOMContentLoaded', () => {
     
     if (qrDataParam) {
         try {
+            console.log('QR Data Parameter:', qrDataParam);
             const parsedData = JSON.parse(decodeURIComponent(qrDataParam));
+            console.log('Parsed QR Data:', parsedData);
+            
             if (parsedData.courseId && parsedData.timestamp && parsedData.sessionId) {
                 qrData = parsedData;
                 showCourseInfo(parsedData);
                 showStudentForm();
                 
                 showMessage('QR code data loaded successfully!', 'success');
+            } else {
+                console.error('Missing required QR data fields:', parsedData);
+                showMessage('Invalid QR code format - missing required fields.', 'error');
             }
         } catch (error) {
             console.error('Error parsing QR data from URL:', error);
             showMessage('Invalid QR code data in URL.', 'error');
         }
+    } else {
+        console.log('No QR data parameter found in URL');
     }
 });
