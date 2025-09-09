@@ -8,6 +8,13 @@ const studentForm = document.getElementById('studentForm');
 const attendanceForm = document.getElementById('attendanceForm');
 const statusMessage = document.getElementById('statusMessage');
 
+// Debug: Log DOM elements on page load
+console.log('DOM Elements loaded:');
+console.log('courseInfo:', courseInfo);
+console.log('studentForm:', studentForm);
+console.log('attendanceForm:', attendanceForm);
+console.log('statusMessage:', statusMessage);
+
 // Process QR Code Data from URL
 function processQRCodeFromURL(data) {
     try {
@@ -291,12 +298,16 @@ attendanceForm.addEventListener('submit', async (e) => {
 
 // Check if QR data is passed in URL parameters on page load
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('Page loaded, checking for QR data...');
+    
     // Check if QR data is passed in URL parameters
     const urlParams = new URLSearchParams(window.location.search);
     const courseId = urlParams.get('c');
     const sessionId = urlParams.get('s');
     const timestamp = urlParams.get('t');
     const qrDataParam = urlParams.get('data'); // Fallback for old format
+    
+    console.log('URL parameters:', { courseId, sessionId, timestamp, qrDataParam });
     
     if (courseId && sessionId && timestamp) {
         try {
@@ -341,5 +352,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     } else {
         console.log('No QR data parameters found in URL');
+        // For testing: show the form anyway
+        console.log('Showing form for testing purposes...');
+        showStudentForm();
+        showMessage('No QR code data found. Please scan a QR code to mark attendance.', 'error');
     }
 });
